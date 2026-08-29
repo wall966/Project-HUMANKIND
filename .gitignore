@@ -1,0 +1,9 @@
+# Laravel
+humankind/vendor/
+humankind/.env
+humankind/node_modules/
+humankind/storage/*.key
+
+# Python
+embedding-service/venv/
+embedding-service/__pycache__/

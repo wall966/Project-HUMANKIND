@@ -25,7 +25,7 @@ class ListingController extends Controller
        $categoryId = $embeddingService->findBestCategory($embedding, $categories);
 
        $listing = Listing::create([
-         'user_id' => 2, // temporario ate login ser implementado
+         'user_id' => 2,
          'title' => $request->title,
          'description' => $request->description,
          'category_id' => $categoryId,
@@ -33,5 +33,20 @@ class ListingController extends Controller
        ]);
        return response()->json($listing);
     }
+
+    public function index() {
+      $listings = Listing::all();
+      return response()->json($listings);
+    }
+
+    // Laravel trouve la Category par l'id
+    public function byCategory(Category $category) {
+      $listings = $category->listings()->get();
+      return response()->json([
+        'category' => $category->only(['id', 'name', 'description']),
+        'listings' => $listings,
+      ]);
+    }
 }
+
 

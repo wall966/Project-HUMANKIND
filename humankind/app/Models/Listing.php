@@ -8,6 +8,8 @@ class Listing extends Model
 {
     protected $fillable = ['user_id', 'category_id', 'title', 'description', 'embedding', 'location', 'date_time'];
 
+   protected $hidden = ['embedding'];
+
     protected $casts = [
         'embedding' => 'array',
         'date_time' => 'datetime',

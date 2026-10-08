@@ -7,3 +7,4 @@ humankind/storage/*.key
 # Python
 embedding-service/venv/
 embedding-service/__pycache__/
+Composer-Setup.exe

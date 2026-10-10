@@ -39,7 +39,7 @@ class ListingController extends Controller
       return response()->json($listings);
     }
 
-    // Laravel trouve la Category par l'id
+    // Laravel trouve la Category 
     public function byCategory(Category $category) {
       $listings = $category->listings()->get();
       return response()->json([

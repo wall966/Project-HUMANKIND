@@ -13,7 +13,7 @@ et array a la fin elle simplemente  annone que la function attends recevoir une 
 la partie de "response" elle faz appel http pour le python c'est la meme function mais a l'inverse */
     public function generateEmbedding(string $text): array
     {
-        $response = Http::post('http://127.0.0.1:8000/embedding', [
+        $response = Http::post('http://127.0.0.1:8001/embedding', [
             'texto' => $text,
         ]);
         return $response->json('embedding');

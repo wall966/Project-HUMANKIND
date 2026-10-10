@@ -25,13 +25,13 @@ class ListingController extends Controller
        $categoryId = $embeddingService->findBestCategory($embedding, $categories);
 
        $listing = Listing::create([
-         'user_id' => 2,
+         'user_id' => $request->user()->id,
          'title' => $request->title,
          'description' => $request->description,
          'category_id' => $categoryId,
          'embedding' => $embedding
        ]);
-       return response()->json($listing);
+       return response()->json($listing, 201);
     }
 
     public function index() {

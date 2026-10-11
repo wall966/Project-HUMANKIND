@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 app = FastAPI()
 
 # On l'allume une seule fois, comme une machine a cafe allumee le matin et gardee allumee toute la journee
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
 # Definit la route que Laravel doit appeler pour demander un embedding
 @app.post("/embedding")

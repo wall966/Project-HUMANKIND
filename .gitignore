@@ -8,3 +8,4 @@ humankind/storage/*.key
 embedding-service/venv/
 embedding-service/__pycache__/
 Composer-Setup.exe
+ .vscode/

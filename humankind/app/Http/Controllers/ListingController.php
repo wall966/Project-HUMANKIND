@@ -10,43 +10,43 @@ use App\Models\Listing;
 
 class ListingController extends Controller
 {
-    public function store(Request $request, EmbeddingService $embeddingService)
-    {
-      $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string'
-       ]);
-      
-       //cette ligne  envoie la description http pour la fastAPI et la meme retourne une array de 384 numeros e $embedding garde tout
-       $embedding = $embeddingService->generateEmbedding($request->description);
-       //cette ligne recupere les donnes contenus na base de donnes do Supabase na categorie ("categories")
-       $categories = Category::all();
-        // Compare l'embedding avec chaque catégorie et renvoie l'id de la plus proche       
-       $categoryId = $embeddingService->findBestCategory($embedding, $categories);
+  public function store(Request $request, EmbeddingService $embeddingService)
+  {
+    $request->validate([
+      'title' => 'required|string|max:255',
+      'description' => 'required|string'
+    ]);
 
-       $listing = Listing::create([
-         'user_id' => $request->user()->id,
-         'title' => $request->title,
-         'description' => $request->description,
-         'category_id' => $categoryId,
-         'embedding' => $embedding
-       ]);
-       return response()->json($listing, 201);
-    }
+    //envoie la description à FastAPI → reçoit un vecteur de 384 nombres
+    $embedding = $embeddingService->generateEmbedding($request->description);
+    //Récupère toutes les catégories
+    $categories = Category::all();
+    // Trouve la catégorie la plus proche (similarité cosinus)       
+    $categoryId = $embeddingService->findBestCategory($embedding, $categories);
 
-    public function index() {
-      $listings = Listing::all();
-      return response()->json($listings);
-    }
+    $listing = Listing::create([
+      'user_id' => $request->user()->id,
+      'title' => $request->title,
+      'description' => $request->description,
+      'category_id' => $categoryId,
+      'embedding' => $embedding
+    ]);
+    return response()->json($listing, 201);
+  }
+  
+  public function index()
+  {
+    $listings = Listing::all();
+    return response()->json($listings);
+  }
 
-    // Laravel trouve la Category 
-    public function byCategory(Category $category) {
-      $listings = $category->listings()->get();
-      return response()->json([
-        'category' => $category->only(['id', 'name', 'description']),
-        'listings' => $listings,
-      ]);
-    }
+  // Laravel trouve la Category 
+  public function byCategory(Category $category)
+  {
+    $listings = $category->listings()->get();
+    return response()->json([
+      'category' => $category->only(['id', 'name', 'description']),
+      'listings' => $listings,
+    ]);
+  }
 }
-
-

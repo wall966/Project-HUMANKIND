@@ -15,4 +15,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/listings', [ListingController::class, 'store']);
     Route::get('/listings', [ListingController::class, 'index']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });

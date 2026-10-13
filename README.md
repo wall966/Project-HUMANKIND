@@ -213,4 +213,4 @@ The API is now available at `http://127.0.0.1:8080/api`.
 
 This is a learning project and a proof of concept, built step by step to practice Laravel, React, REST APIs, authentication, and integrating an AI microservice.
 
-**Author:** Wallace Nogueira · [GitHub](https://github.com/wall966)
+**Author:** Nogueira Wallace · [GitHub](https://github.com/wall966)

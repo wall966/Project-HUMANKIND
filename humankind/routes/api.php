@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/listings/{listing}/participate', [ParticipationController::class, 'store']);
     Route::get('/my-activities', [ParticipationController::class, 'index']);
+    Route::patch('/participations/{participations}/', [ParticipationController::class, 'update']);
 });
 

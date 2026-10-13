@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ParticipateRequest;
+use App\Http\Requests\UpdateParticipationRequest;
 use App\Models\Listing;
 use Illuminate\Http\JsonResponse;
 use App\Models\Participation;
@@ -34,5 +35,12 @@ class ParticipationController extends Controller
         $participations = $request->user()->participations()->with('listing')->latest()->get();
         return response()->json($participations);
 
+    }
+
+    public function update(UpdateParticipationRequest $request, Participation $participation):JsonResponse {
+        if($participation->status !== 'pending'){
+            return response()->json(['message' => 'Cette demande deja été traitee'],409);
+            
+        }
     }
 }

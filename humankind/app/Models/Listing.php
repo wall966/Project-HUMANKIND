@@ -29,4 +29,6 @@ class Listing extends Model
     {
         return $this->hasMany(Participation::class);
     }
+
+    
 }

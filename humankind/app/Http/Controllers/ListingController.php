@@ -17,6 +17,7 @@ class ListingController extends Controller
       'description' => 'required|string'
     ]);
 
+    
     //envoie la description à FastAPI → reçoit un vecteur de 384 nombres
     $embedding = $embeddingService->generateEmbedding($request->description);
     //Récupère toutes les catégories

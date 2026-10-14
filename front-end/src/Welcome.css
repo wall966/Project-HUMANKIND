@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --color-primary: #AD5C38;
+    --color-primary-hover: #914626;
+
+    --color-background: #F5EEDF;
+    --color-surface: #FFFFFF;
+
+    --color-text: #454139;
+    --color-text-secondary: #8A6B58;
+
+    --color-border: #DCC0A3;
+
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+
+    --radius-input: 18px;
+    --radius-button: 16px;
+}
+
+body {
+    background-color: var(--color-background);
+    margin: 0;
+}
+
+.welcome {
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    font-family: var(--font-body);
+    color: var(--color-text);
+
+    background-image:
+        url('./assets/moldura-top.png'),
+        url('./assets/moldura-bottom.png');
+    background-position:
+        top left,
+        bottom right;
+    background-size:
+        clamp(140px, 22vw, 300px) auto,
+        clamp(160px, 25vw, 340px) auto;
+    background-repeat: no-repeat;
+}
+
+.welcome-hands {
+    width: 180px;
+}
+
+.welcome-human {
+    font-family: var(--font-heading);
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin: 8px 0 0;
+}
+
+
+.welcome-text {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    max-width: 420px;
+    line-height: 1.4;
+    margin: 16px 0 32px;
+}
+
+.welcome-form {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.welcome-form input {
+    height: 56px;
+    padding: 0 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.welcome-form input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.welcome-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+
+.btn-create {
+    height: 52px;
+    margin-top: 8px;
+    border: none;
+    border-radius: var(--radius-button);
+    background: var(--color-primary);
+    color: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-create:hover {
+    background: var(--color-primary-hover);
+}
+
+.welcome-footer {
+    margin-top: 24px;
+    color: var(--color-text-secondary);
+}
+
+.welcome-footer a {
+    color: var(--color-primary);
+    text-underline-offset: 4px;
+}
+
+
+@media (max-width: 480px) {
+    .welcome-human {
+        font-size: 56px;
+    }
+
+    .welcome-text {
+        font-size: 1.25rem;
+    }
+}

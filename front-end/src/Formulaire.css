@@ -24,3 +24,39 @@ body {
     margin: 0;
 }
 
+.form-head {
+    display: flex;
+    justify-content: space-between;   
+    align-items: center;              
+    padding: 10px 10px;
+    background: #FBF6EE;             
+    border-bottom: 1px solid var(--color-border);
+    height: 65px;
+}
+
+.welcome-hands {
+    width: 100px;
+    height: 85px;
+    
+}
+
+.title {
+      font-family: var(--font-heading);
+      color: var(--color-primary);
+      font-size: 40px;
+}
+
+.form-back {
+     color: var(--color-primary);
+     font-size: 25px;
+}
+
+.form-back:hover {
+     color: red;
+}
+
+.logo-title {
+    display: flex;
+    margin-left: 20px;
+    
+}

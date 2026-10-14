@@ -91,8 +91,9 @@ When a user creates a listing, they **don't pick a category**. The app reads the
 Project-HUMANKIND/
 ├── frontend/             # React app (coming soon)
 ├── humankind/            # Laravel REST API
-│   ├── app/Http/Controllers/   # AuthController, ListingController
-│   ├── app/Http/Requests/Auth/ # Login & Register validation
+│   ├── app/Http/Controllers/   # Auth, Listing, Category, Participation controllers
+│   ├── app/Http/Requests/      # Form request validation (login, register, participation)
+│   ├── app/Models/             # User, Listing, Category, Participation
 │   ├── app/Services/           # EmbeddingService (calls FastAPI + cosine similarity)
 │   └── routes/api.php
 └── embedding-service/    # Python microservice that turns text into embeddings
@@ -105,15 +106,42 @@ Project-HUMANKIND/
 
 All endpoints are prefixed with `/api`. Send the `Accept: application/json` header on every request.
 
+### Authentication
+
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
 | `POST` | `/register` | – | Create an account and get a token |
 | `POST` | `/login` | – | Log in and get a token |
+| `POST` | `/logout` | 🔒 | Revoke the current token |
 | `GET` | `/user` | 🔒 | Get the authenticated user |
-| `GET` | `/listings` | 🔒 | List all listings |
-| `POST` | `/listings` | 🔒 | Create a listing (category assigned automatically) |
 
-🔒 = requires `Authorization: Bearer <token>`
+### Listings & categories
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `GET` | `/listings` | 🔒 | List all listings |
+| `POST` | `/listings` | 🔒 | Create a listing (category assigned automatically by AI) |
+| `GET` | `/listings/{listing}` | 🔒 | Listing details, with the creator's name and the category |
+| `GET` | `/categories` | 🔒 | List all categories |
+| `GET` | `/categories/{category}/listings` | 🔒 | Listings of a category |
+
+### Participations
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/listings/{listing}/participate` | 🔒 | Ask to join a listing (optional `comment`). Status starts as `pending` |
+| `GET` | `/my-activities` | 🔒 | The user's participations, with their status and listing |
+| `GET` | `/listings/{listing}/participations` | 🔒 👑 | Requests received for a listing (creator only) |
+| `PATCH` | `/participations/{participation}` | 🔒 👑 | Approve or reject a request: `{ "status": "approved" \| "rejected" }` (creator only) |
+
+🔒 = requires `Authorization: Bearer <token>` · 👑 = only the listing's creator
+
+**Business rules**
+- A user can't join their own listing → `403`
+- A user can't join the same listing twice → `409`
+- Only the listing's creator can see and answer its requests → `403`
+- A request can only be answered once (it must still be `pending`) → `409`
+- Requests only expose the participant's `id` and `name` (no email)
 
 <details>
 <summary>Example: register</summary>
@@ -189,10 +217,13 @@ The API is now available at `http://127.0.0.1:8080/api`.
 - [x] Automatic listing categorization with cosine similarity
 - [x] Registration and login with Sanctum tokens
 - [x] Protected listing routes linked to the authenticated user
+- [x] Logout (token revocation)
+- [x] Listing details and browsing by category
+- [x] Participation flow: join a listing (pending), "my activities", creator sees and approves/rejects requests
+- [x] Business rules (no self-participation, no duplicates, creator-only approval)
 
 **Next**
-- [ ] Logout (token revocation)
-- [ ] Participation flow: join a listing, pending/approved/rejected status, approval by the creator
+- [ ] Share the listing's details (time, address, contact) only with approved participants
 - [ ] Category seeder with pre-computed embeddings
 - [ ] Error handling when the embedding service is offline
 - [ ] Feature tests (`Http::fake()` for the embedding service)
@@ -206,6 +237,7 @@ The API is now available at `http://127.0.0.1:8080/api`.
 
 **Later (out of scope for the POC)**
 - [ ] Trust and safety: user ratings and identity verification
+- [ ] Database unique constraint on participations (`listing_id`, `user_id`) against race conditions
 
 ---
 

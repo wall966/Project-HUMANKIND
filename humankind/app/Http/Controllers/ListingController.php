@@ -41,15 +41,7 @@ class ListingController extends Controller
     return response()->json($listings);
   }
 
-  // Laravel trouve la Category 
-  public function byCategory(Category $category):JsonResponse
-  {
-    $listings = $category->listings()->get();
-    return response()->json([
-      'category' => $category->only(['id', 'name', 'description']),
-      'listings' => $listings,
-    ]);
-  }
+
   //retourne l'annonce recherche
   public function show(Listing $listing):JsonResponse
   {

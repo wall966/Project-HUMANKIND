@@ -55,4 +55,3 @@ la partie de "response" elle faz appel http pour le python c'est la meme functio
     }
 }
 
-?>

@@ -10,7 +10,7 @@ use App\Models\Participation;
 use Illuminate\Http\Request;
 
 
-//recupere les donnes deja valides
+
 class ParticipationController extends Controller
 {
     public function store(ParticipateRequest $request, Listing $listing): JsonResponse
@@ -36,11 +36,22 @@ class ParticipationController extends Controller
         return response()->json($participations);
 
     }
-
+        // actualiser le status d'une annonce
     public function update(UpdateParticipationRequest $request, Participation $participation):JsonResponse {
         if($participation->status !== 'pending'){
-            return response()->json(['message' => 'Cette demande deja été traitee'],409);
-            
+            return response()->json(['message' => 'Cette demande deja été traitee'],409);          
         }
+
+        $participation->update(['status'=> $request->status]);
+        return response()->json($participation);
+    }
+
+    //seulement le creator de l'annonce peut voir les demandes
+    public function listingParticipation(Request $request, Listing $listing):JsonResponse {
+        if($listing->user_id !== $request->user()->id) {
+            return response()->json(['message'=> 'Accès reserve au creator de l\'annonce'], 403);
+        }
+        $participations = $listing->participations()->with('user:id,name')->latest()->get();
+        return response()->json($participations);
     }
 }

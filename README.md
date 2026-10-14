@@ -161,7 +161,7 @@ python -m venv venv
 source venv/bin/activate
 
 pip install -r requirements.txt
-python -m uvicorn main:app --port 8000
+python -m uvicorn main:app --port 8001
 ```
 
 > The first start downloads the model and can take a minute or two. Wait for `Application startup complete`.

@@ -50,7 +50,7 @@ class AuthController extends Controller
 
     public function logout(Request $request):JsonResponse {
        $request->user()->currentAccessToken()->delete(); 
-       return response()->json(['message'=> 'Utilisateur deconnecte']);
+       return response()->json(['message'=> 'Utilisateur déconnecté']);
     }
 
 }

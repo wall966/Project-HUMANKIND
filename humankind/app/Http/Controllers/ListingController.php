@@ -6,7 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\EmbeddingService;
 use App\Models\Listing;
-
+use Illuminate\Http\JsonResponse;
 
 class ListingController extends Controller
 {
@@ -17,7 +17,7 @@ class ListingController extends Controller
       'description' => 'required|string'
     ]);
 
-    
+
     //envoie la description à FastAPI → reçoit un vecteur de 384 nombres
     $embedding = $embeddingService->generateEmbedding($request->description);
     //Récupère toutes les catégories
@@ -34,7 +34,7 @@ class ListingController extends Controller
     ]);
     return response()->json($listing, 201);
   }
-  
+  //lister tout les annonces
   public function index()
   {
     $listings = Listing::all();
@@ -42,12 +42,18 @@ class ListingController extends Controller
   }
 
   // Laravel trouve la Category 
-  public function byCategory(Category $category)
+  public function byCategory(Category $category):JsonResponse
   {
     $listings = $category->listings()->get();
     return response()->json([
       'category' => $category->only(['id', 'name', 'description']),
       'listings' => $listings,
     ]);
+  }
+  //retourne l'annonce recherche
+  public function show(Listing $listing):JsonResponse
+  {
+    $listing->load(['user:id,name', 'category:id,name']);
+    return response()->json($listing);
   }
 }

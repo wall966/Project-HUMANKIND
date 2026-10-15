@@ -103,6 +103,7 @@ function Welcome() {
                 Nous sommes le pont entre l’être et le ressenti.
             </p>
 
+
             <form className='welcome-form' onSubmit={handleSubmit} noValidate>
                 <div className='welcome-field'>
                     <input
@@ -140,7 +141,7 @@ function Welcome() {
             </form>
 
             <p className='welcome-footer'>
-                Vous n’avez pas encore de compte ? <Link to='/login'>S’inscrire</Link>
+                Vous n’avez pas encore de compte ? <Link to='/register'>S’inscrire</Link>
             </p>
         </main>
     );

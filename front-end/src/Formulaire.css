@@ -24,39 +24,458 @@ body {
     margin: 0;
 }
 
-.form-head {
+/* Toutes les classes de cette page commencent par "fp-" (Formulaire Page)
+   pour ne pas entrer en conflit avec les autres pages : en React, le CSS est global. */
+
+.fp {
+    --fp-field-bg: #FBF6EE;
+    --fp-error: #B3261E;
+    --fp-error-bg: #FFF6F4;
+    --fp-ai-bg: #F5E1D3;
+    --fp-tips-bg: #FAEDE3;
+
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--color-text);
+}
+
+/* ---------- Header ---------- */
+
+.fp-header {
     display: flex;
-    justify-content: space-between;   
-    align-items: center;              
-    padding: 10px 10px;
-    background: #FBF6EE;             
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 100px;
+    background: var(--fp-field-bg);
     border-bottom: 1px solid var(--color-border);
-    height: 65px;
 }
 
-.welcome-hands {
-    width: 100px;
-    height: 85px;
-    
-}
-
-.title {
-      font-family: var(--font-heading);
-      color: var(--color-primary);
-      font-size: 40px;
-}
-
-.form-back {
-     color: var(--color-primary);
-     font-size: 25px;
-}
-
-.form-back:hover {
-     color: red;
-}
-
-.logo-title {
+.fp-brand {
     display: flex;
-    margin-left: 20px;
-    
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.fp-brand-logo {
+    width: 40px;
+}
+
+.fp-brand-name {
+    font-family: var(--font-heading);
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.fp-back {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.fp-back:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* ---------- Deux colonnes : formulaire + aperçu ---------- */
+
+.fp-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 32px;
+    align-items: start;
+    max-width: 1240px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.fp-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: 36px 32px;
+}
+
+.fp-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0;
+    line-height: 1.1;
+}
+
+.fp-subtitle {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    margin: 8px 0 28px;
+}
+
+/* ---------- Champs ---------- */
+
+.fp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    min-width: 0;
+}
+
+.fp-field > label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.fp-field input:not([type="checkbox"]),
+.fp-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--fp-field-bg);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.fp-field input:not([type="checkbox"]) {
+    height: 52px;
+}
+
+.fp-field textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.fp-field input::placeholder,
+.fp-field textarea::placeholder {
+    color: #A89383;
+}
+
+.fp-field input:focus,
+.fp-field textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(173, 92, 56, 0.12);
+}
+
+/* Champ en erreur : bordure rouge + fond rosé */
+.fp-field .is-invalid {
+    border: 2px solid var(--fp-error);
+    background: var(--fp-error-bg);
+}
+
+.fp-error {
+    color: var(--fp-error);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.fp-field-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.fp-counter {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+/* Date + ville, adresse + téléphone : deux champs côte à côte */
+.fp-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ---------- Bloc privé ---------- */
+
+.fp-private {
+    border: 1px dashed var(--color-border);
+    border-radius: 16px;
+    padding: 16px 20px 4px;
+    margin: 4px 0 20px;
+}
+
+.fp-private legend {
+    padding: 0 8px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.fp-private-note {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin: -8px 0 16px;
+}
+
+/* ---------- Encadré IA ---------- */
+
+.fp-ai {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--fp-ai-bg);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin: 0 0 20px;
+    font-size: 0.95rem;
+}
+
+.fp-ai span {
+    color: var(--color-primary);
+    font-size: 1.2rem;
+}
+
+/* ---------- Charte ---------- */
+
+.fp-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.fp-checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+}
+
+.fp-checkbox a {
+    color: var(--color-primary);
+    text-underline-offset: 3px;
+}
+
+/* ---------- Message global + boutons ---------- */
+
+.fp-message {
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 0 0 16px;
+}
+
+.fp-message-success {
+    background: #E8F3E8;
+    color: #2E6B34;
+}
+
+.fp-message-error {
+    background: var(--fp-error-bg);
+    color: var(--fp-error);
+}
+
+.fp-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.fp-btn {
+    height: 48px;
+    padding: 0 24px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.fp-btn-secondary {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.fp-btn-secondary:hover {
+    border-color: var(--color-primary);
+}
+
+.fp-btn-primary {
+    background: var(--color-primary);
+    border: none;
+    color: var(--color-surface);
+}
+
+.fp-btn-primary:hover {
+    background: var(--color-primary-hover);
+}
+
+.fp-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ---------- Colonne Aperçu ---------- */
+
+.fp-aside {
+    position: sticky;
+    top: 24px;
+}
+
+.fp-aside-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin: 4px 0 12px;
+}
+
+.fp-preview {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+}
+
+.fp-badge {
+    display: inline-block;
+    background: var(--fp-ai-bg);
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.fp-preview-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 12px 0 8px;
+    overflow-wrap: anywhere;
+}
+
+.fp-preview-text {
+    font-size: 0.95rem;
+    margin: 0 0 12px;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.fp-preview-meta {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.fp-tips {
+    background: var(--fp-tips-bg);
+    border-radius: 16px;
+    padding: 18px 20px;
+}
+
+.fp-tips h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.fp-tips p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* ---------- Autocomplétion de la ville ---------- */
+
+.city-autocomplete {
+    position: relative;
+}
+
+.city-suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 10;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(69, 65, 57, 0.12);
+}
+
+.city-suggestions button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    font-family: var(--font-body);
+    text-align: left;
+    cursor: pointer;
+}
+
+.city-suggestions button:hover,
+.city-suggestions button:focus-visible {
+    background: var(--fp-field-bg);
+    outline: none;
+}
+
+.city-name {
+    color: var(--color-text);
+}
+
+.city-details {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.city-suggestions-info {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* ---------- Tablette et mobile ---------- */
+
+@media (max-width: 900px) {
+    .fp-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .fp-aside {
+        position: static;
+    }
+}
+
+@media (max-width: 600px) {
+    .fp-header {
+        padding: 12px 16px;
+    }
+
+    .fp-card {
+        padding: 24px 18px;
+    }
+
+    .fp-title {
+        font-size: 2.2rem;
+    }
+
+    .fp-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fp-actions {
+        flex-direction: column-reverse;
+    }
 }

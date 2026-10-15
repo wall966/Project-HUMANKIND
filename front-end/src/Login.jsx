@@ -14,16 +14,12 @@ function Welcome() {
             </p>
 
             <form className='welcome-form'>
-                <input type="text" name='name' placeholder='Name' />
+                <input type="text" name='name' placeholder='Nom' />
                 <input type="email" name='email' placeholder='Email' />
-                <input type="password" name='password' placeholder='Password' />
-                <input type="password" name='password_confirmation' placeholder='Confirm password' />
-                <button type="submit" className="btn-create">Create account</button>
+                <input type="password" name='password' placeholder='Mot de passe' />
+                <input type="password" name='password_confirmation' placeholder='Confirmer le mot de passe' />
+                <button type="submit" className="btn-create">Créer un compte</button>
             </form>
-
-            <p className='welcome-footer'>
-                Already have an account? <a href='/login'>Log in</a>
-            </p>
         </main>
     );
 }

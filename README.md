@@ -2,9 +2,21 @@
 
 > **Proof of Concept**: an app that connects people through shared activities, mutual help, and learning from one another.
 
-HUMANKIND helps people who have free time and want to share it find each other. Someone can offer to spend an afternoon at the park, organize a group volunteering session, tell the story of a place, look for a travel companion, or simply say *"I want to practice English, I have one hour free."*
+HUMANKIND brings together people who have free time and want to **offer** it to others. Someone can offer to spend an afternoon at the park, organize a group volunteering session, tell the story of a place, share a skill, or simply say *"I can help you practice English, I have one hour free."*
 
 The goal is to help people try things they've always wanted to learn, get out of the house, and build connections across generations.
+
+---
+
+## Preview
+
+| Log in | Sign up |
+|---|---|
+| ![Log in page](img/log-in.png) | ![Sign up page](img/create-user.png) |
+
+**Offer your help:** the form has a live preview, a city autocomplete limited to real places, and a private section (address, phone) shared only with approved participants. No category to pick: the AI finds it from the description.
+
+![Create a listing page](img/form.png)
 
 ### Example activities
 
@@ -17,22 +29,22 @@ The goal is to help people try things they've always wanted to learn, get out of
 | 🏛️ **Culture & history** | Discovering the history of a place or neighborhood, visiting a museum together |
 | ✈️ **Travel** | Finding a travel companion for the same destination |
 
-An activity can come from either side: someone **offering** something (*"I can teach you how to bake bread on Saturday"*) or someone **looking** for something (*"I want to practice English, I have one hour free"*).
+Every listing is an **offer of help** (*"I can teach you how to bake bread on Saturday"*). HumanKind is built by people who are willing to give some of their time.
 
 ---
 
 ## Core concepts
 
-- **Shared activities.** Users publish activities or requests, and others join them.
-- **Flexible roles.** There is no fixed "teacher" or "student". Anyone can teach and learn at the same time, depending on their interests.
-- **Browse by category.** Users find opportunities by browsing categories (e.g. *good deeds*, *languages*, *outdoors*) instead of scrolling through a social feed.
+- **Offers of help.** Users publish what they can offer, and others ask to join.
+- **Flexible roles.** There is no fixed "teacher" or "student". Anyone can offer help on one topic and join someone else's activity on another.
+- **AI-powered search.** Nobody picks a category: the AI assigns one when a listing is published, and finds the right one from what a user types in the search bar.
 - **No built-in messaging.** Contact details are shared only after a participation is approved.
 - **Multilingual.** Portuguese, English, and French are planned.
 
 ### Participation flow
 
 ```
-Browse category → Open listing → "Participate" + short comment
+Search → Open listing → "Participate" + short comment
         → Status: PENDING (shown in "My activities")
         → Listing creator approves
         → Participant receives the details (time, address, contact)
@@ -64,7 +76,8 @@ When a user creates a listing, they **don't pick a category**. The app reads the
 
 | Layer | Technology |
 |---|---|
-| Frontend | **React** (SPA consuming the Laravel API) *(in development)* |
+| Frontend | **React 19** + **Vite** + **React Router** (SPA consuming the Laravel API) *(in development)* |
+| Place search | **Photon** (OpenStreetMap), free and worldwide |
 | Backend API | **Laravel 12** (PHP 8.2) |
 | Authentication | **Laravel Sanctum** (API tokens) |
 | Database | **PostgreSQL** (hosted on Supabase) |
@@ -89,7 +102,9 @@ When a user creates a listing, they **don't pick a category**. The app reads the
 
 ```
 Project-HUMANKIND/
-├── frontend/             # React app (coming soon)
+├── front-end/            # React app (Vite)
+│   └── src/                    # Welcome (log in), Login (sign up), Formulaire (create a listing)
+├── img/                  # Screenshots used in this README
 ├── humankind/            # Laravel REST API
 │   ├── app/Http/Controllers/   # Auth, Listing, Category, Participation controllers
 │   ├── app/Http/Requests/      # Form request validation (login, register, participation)
@@ -207,6 +222,17 @@ php artisan serve --port=8080
 
 The API is now available at `http://127.0.0.1:8080/api`.
 
+### 3. React front-end
+
+```bash
+cd front-end
+npm install
+cp .env.example .env        # VITE_API_URL=http://127.0.0.1:8080/api
+npm run dev
+```
+
+The app is now available at `http://localhost:5173`.
+
 ---
 
 ## Roadmap
@@ -227,12 +253,17 @@ The API is now available at `http://127.0.0.1:8080/api`.
 - [ ] Category seeder with pre-computed embeddings
 - [ ] Error handling when the embedding service is offline
 - [ ] Feature tests (`Http::fake()` for the embedding service)
+- [ ] AI search: `GET /listings?q=...` finds the closest category from the user's query
+- [ ] Account deletion (GDPR right to erasure)
 - [ ] React frontend
-  - [ ] Register / login screens (token stored client-side, sent as `Bearer`)
-  - [ ] Browse activities by category
+  - [x] Project setup (Vite, React Router), visual identity, log in and sign up pages
+  - [x] Log in connected to the API (token stored client-side, sent as `Bearer`)
+  - [x] "Offer your help" form: live preview, validation, city autocomplete (Photon)
+  - [ ] Sign up connected to the API
+  - [ ] Back-end support for the form's new fields (date, city, private address and phone)
+  - [ ] Listings page with the AI search bar
   - [ ] Activity details and "Participate" button
   - [ ] "My activities" page with participation status (pending / approved)
-  - [ ] Create a listing (offer or request)
 - [ ] i18n (PT / EN / FR)
 
 **Later (out of scope for the POC)**

@@ -45,10 +45,19 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
+    // ⚠️ is_admin n'est volontairement PAS dans $fillable : sinon n'importe qui
+    // pourrait s'inscrire en envoyant "is_admin": true (faille d'assignation de masse).
+
     public function participations() {
         return $this->hasMany(Participation::class);
+    }
+
+    // les annonces publiées par cet utilisateur
+    public function listings() {
+        return $this->hasMany(Listing::class);
     }
 }

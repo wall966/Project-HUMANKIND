@@ -49,8 +49,29 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request):JsonResponse {
-       $request->user()->currentAccessToken()->delete(); 
+       $request->user()->currentAccessToken()->delete();
        return response()->json(['message'=> 'Utilisateur déconnecté']);
+    }
+
+    // Supprimer son propre compte (droit à l'effacement, RGPD).
+    // On redemande le mot de passe : action définitive, et protège un ordinateur resté ouvert.
+    public function destroy(Request $request): JsonResponse {
+        $request->validate(['password' => 'required|string']);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Mot de passe incorrect.',
+                'errors' => ['password' => ['Mot de passe incorrect.']],
+            ], 422);
+        }
+
+        // annonces et participations : supprimées par les "cascade" de la base
+        $user->tokens()->delete(); // la table des tokens n'a pas de cascade
+        $user->delete();
+
+        return response()->json(['message' => 'Compte supprimé.']);
     }
 
 }

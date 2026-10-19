@@ -171,3 +171,13 @@ body {
     opacity: 0.6;
     cursor: wait;
 }
+
+/* Message après la suppression du compte */
+.welcome-info {
+    max-width: 420px;
+    margin: 0 0 20px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #E8F3E8;
+    color: #2E6B34;
+}

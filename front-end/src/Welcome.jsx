@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import './Welcome.css';
 import hands from './assets/hands.png';
 
@@ -8,6 +8,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function Welcome() {
     const navigate = useNavigate();
+    // true quand on arrive ici juste après avoir supprimé son compte (envoyé par Compte.jsx)
+    const compteSupprime = useLocation().state?.compteSupprime;
 
     // 1. L'ÉTAT : ce que la personne tape, les erreurs et l'envoi en cours
     const [values, setValues] = useState({ email: '', password: '' });
@@ -103,6 +105,12 @@ function Welcome() {
                 Nous sommes le pont entre l’être et le ressenti.
             </p>
 
+
+            {compteSupprime && (
+                <p className='welcome-info' role='status'>
+                    Votre compte a bien été supprimé. Merci d’avoir fait partie de HumanKind.
+                </p>
+            )}
 
             <form className='welcome-form' onSubmit={handleSubmit} noValidate>
                 <div className='welcome-field'>

@@ -115,8 +115,13 @@ function Formulaire() {
                 body: JSON.stringify({
                     title: values.title.trim(),
                     description: values.description.trim(),
-                    date_time: values.dateTime,
+                    // "2026-10-25T14:30" (heure locale, sans fuseau) → "2026-10-25T13:30:00.000Z" (UTC)
+                    // Sans ça, Laravel croit que l'heure est déjà en UTC : décalage d'une ou deux heures.
+                    date_time: new Date(values.dateTime).toISOString(),
                     location: values.city.label,
+                    // coordonnées de la ville (Photon) : servent au filtre "Rayon" de la page des annonces
+                    latitude: values.city.lat,
+                    longitude: values.city.lon,
                     address: values.address.trim(),
                     contact_phone: values.phone.trim() || null,
                 }),
@@ -124,7 +129,12 @@ function Formulaire() {
             const data = await response.json();
 
             if (response.status === 201) {
-                setMessage({ type: 'success', text: 'Votre proposition a été publiée. Merci ! 🙌' });
+                // retour à la liste, où la nouvelle annonce apparaît en premier
+                navigate('/annonces', { state: { publiee: data.title } });
+                return;
+            }
+            if (response.status === 503) {
+                setMessage({ type: 'error', text: data.message });
                 return;
             }
             if (response.status === 401) {
@@ -155,7 +165,7 @@ function Formulaire() {
     return (
         <div className='fp'>
             <header className='fp-header'>
-                <Link to="/" className='fp-brand'>
+                <Link to="/annonces" className='fp-brand'>
                     <img src={hands} alt="" className='fp-brand-logo' />
                     <span className='fp-brand-name'>HumanKind</span>
                 </Link>

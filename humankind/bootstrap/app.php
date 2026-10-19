@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // "admin" : réserve une route aux administrateurs (à utiliser après auth:sanctum)
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        ]);
+
          $middleware->validateCsrfTokens(except: [
         'listings',
          ]);

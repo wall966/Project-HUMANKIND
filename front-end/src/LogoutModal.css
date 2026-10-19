@@ -1,0 +1,148 @@
+/* Fenêtre de déconnexion : toutes les classes commencent par "lo-" */
+
+.lo {
+    width: min(512px, calc(100% - 32px));
+    padding: 0;
+    border: none;
+    border-radius: 28px;
+    background: #F5EDE1;
+    box-shadow: 0 24px 60px rgba(40, 25, 15, 0.35);
+    font-family: var(--font-body);
+    color: var(--color-text);
+}
+
+/* Le fond assombri derrière la fenêtre */
+.lo::backdrop {
+    background: rgba(70, 52, 40, 0.6);
+}
+
+/* Apparition douce */
+.lo[open] {
+    animation: lo-apparition 0.2s ease-out;
+}
+
+@keyframes lo-apparition {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.lo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 44px 36px 36px;
+    text-align: center;
+}
+
+.lo-logo {
+    width: 72px;
+}
+
+.lo-title {
+    font-family: var(--font-heading);
+    font-size: 2.3rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 18px 0 14px;
+    line-height: 1.1;
+}
+
+.lo-text {
+    margin: 0 0 28px;
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+.lo-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.lo-btn {
+    height: 52px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.lo-btn-primary {
+    border: none;
+    background: var(--color-primary);
+    color: var(--color-surface);
+    font-weight: 600;
+}
+
+.lo-btn-primary:hover {
+    background: var(--color-primary-hover);
+}
+
+.lo-btn-secondary {
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.lo-btn-secondary:hover {
+    border-color: var(--color-primary);
+}
+
+/* Bouton rouge des suppressions (ConfirmModal) */
+.lo-btn-danger {
+    border: none;
+    background: #B3261E;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.lo-btn-danger:hover {
+    background: #8C1D17;
+}
+
+/* Champ dans la fenêtre (ex. : mot de passe) */
+.lo-field {
+    width: 100%;
+    box-sizing: border-box;
+    height: 50px;
+    margin-bottom: 14px;
+    padding: 0 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: #FFFFFF;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.lo-field:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.lo-error {
+    margin: -4px 0 14px;
+    color: #B3261E;
+    font-size: 0.9rem;
+}
+
+.lo-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* Les personnes qui ont désactivé les animations dans leur système */
+@media (prefers-reduced-motion: reduce) {
+    .lo[open] {
+        animation: none;
+    }
+}

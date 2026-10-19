@@ -6,13 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Listing extends Model
 {
-    protected $fillable = ['user_id', 'category_id', 'title', 'description', 'embedding', 'location', 'date_time'];
+    protected $fillable = [
+        'user_id', 'category_id', 'title', 'description', 'embedding',
+        'location', 'latitude', 'longitude', 'date_time', 'address', 'contact_phone',
+    ];
 
-   protected $hidden = ['embedding'];
+    // Jamais dans le JSON par défaut : l'embedding (384 nombres) et les informations privées.
+    // L'adresse et le téléphone ne seront révélés qu'aux participants validés.
+    protected $hidden = ['embedding', 'address', 'contact_phone'];
 
     protected $casts = [
         'embedding' => 'array',
         'date_time' => 'datetime',
+        // DECIMAL est renvoyé comme texte ("43.611000") : on le convertit en nombre
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     public function user()

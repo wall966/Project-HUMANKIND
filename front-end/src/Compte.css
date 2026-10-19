@@ -1,0 +1,84 @@
+/* Page "Mon compte" : toutes les classes commencent par "ct-" */
+
+.ct {
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--color-text);
+}
+
+.ct-main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 44px 24px 64px;
+}
+
+.ct-title {
+    font-family: var(--font-heading);
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0 0 24px;
+}
+
+.ct-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 24px 26px;
+    margin-bottom: 20px;
+}
+
+.ct-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 14px;
+}
+
+.ct-infos {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 10px 16px;
+    margin: 0;
+}
+
+.ct-infos dt {
+    color: var(--color-text-secondary);
+}
+
+.ct-infos dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Zone sensible, séparée et en rouge */
+.ct-danger {
+    border-color: #E8B4AE;
+    background: #FFF8F6;
+}
+
+.ct-danger .ct-card-title {
+    color: #B3261E;
+}
+
+.ct-danger p {
+    margin: 0 0 18px;
+    line-height: 1.6;
+}
+
+.ct-btn-danger {
+    padding: 12px 22px;
+    border: 1px solid #B3261E;
+    border-radius: 999px;
+    background: #FFFFFF;
+    color: #B3261E;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.ct-btn-danger:hover {
+    background: #B3261E;
+    color: #FFFFFF;
+}

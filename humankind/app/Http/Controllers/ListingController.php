@@ -10,16 +10,30 @@ use Illuminate\Http\JsonResponse;
 
 class ListingController extends Controller
 {
-  public function store(Request $request, EmbeddingService $embeddingService)
+  public function store(Request $request, EmbeddingService $embeddingService): JsonResponse
   {
+    // mêmes règles que le formulaire React (Formulaire.jsx)
     $request->validate([
-      'title' => 'required|string|max:255',
-      'description' => 'required|string'
+      'title' => 'required|string|min:5|max:255',
+      'description' => 'required|string|max:1000',
+      'date_time' => 'required|date|after:now',
+      'location' => 'required|string|max:255',
+      // coordonnées de la ville choisie dans l'autocomplétion (Photon)
+      'latitude' => 'nullable|numeric|between:-90,90',
+      'longitude' => 'nullable|numeric|between:-180,180',
+      'address' => 'required|string|min:5|max:255',
+      'contact_phone' => ['nullable', 'string', 'max:20', 'regex:/^\+?[0-9 .()-]{8,20}$/'],
     ]);
 
-
     //envoie la description à FastAPI → reçoit un vecteur de 384 nombres
-    $embedding = $embeddingService->generateEmbedding($request->description);
+    try {
+      $embedding = $embeddingService->generateEmbedding($request->description);
+    } catch (\Throwable $e) {
+      report($e); // garde la trace de l'erreur dans storage/logs/laravel.log
+      return response()->json([
+        'message' => 'Le service de catégorisation est indisponible. Réessayez dans un instant.',
+      ], 503);
+    }
     //Récupère toutes les catégories
     $categories = Category::all();
     // Trouve la catégorie la plus proche (similarité cosinus)       
@@ -30,14 +44,23 @@ class ListingController extends Controller
       'title' => $request->title,
       'description' => $request->description,
       'category_id' => $categoryId,
-      'embedding' => $embedding
+      'embedding' => $embedding,
+      'date_time' => $request->date_time,
+      'location' => $request->location,
+      'latitude' => $request->latitude,
+      'longitude' => $request->longitude,
+      'address' => $request->address,
+      'contact_phone' => $request->contact_phone,
     ]);
-    return response()->json($listing, 201);
+
+    // renvoie l'annonce avec le nom de la catégorie choisie par l'IA
+    return response()->json($listing->load('category:id,name'), 201);
   }
   //lister tout les annonces
-  public function index()
+  // toutes les annonces, les plus récentes d'abord, avec le prénom de l'auteur et la catégorie
+  public function index(): JsonResponse
   {
-    $listings = Listing::all();
+    $listings = Listing::with(['user:id,name', 'category:id,name'])->latest()->get();
     return response()->json($listings);
   }
 

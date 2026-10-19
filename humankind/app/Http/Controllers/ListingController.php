@@ -65,6 +65,22 @@ class ListingController extends Controller
   }
 
 
+  // Mes annonces, avec les demandes de participation reçues (prénom du demandeur, commentaire, statut).
+  // Je suis le créateur : je vois aussi mon adresse et mon téléphone.
+  public function mine(Request $request): JsonResponse
+  {
+    $listings = $request->user()->listings()
+      ->with([
+        'category:id,name',
+        'participations' => fn ($q) => $q->with('user:id,name')->latest(),
+      ])
+      ->latest()
+      ->get()
+      ->each(fn ($listing) => $listing->makeVisible(['address', 'contact_phone']));
+
+    return response()->json($listings);
+  }
+
   //retourne l'annonce recherche
   public function show(Listing $listing):JsonResponse
   {

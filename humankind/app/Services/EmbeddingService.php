@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Http;
 
 class EmbeddingService
 {
+    // Catégorie utilisée quand aucune autre n'est assez proche
+    public const CATEGORIE_PAR_DEFAUT = 'Autres';
+
+    // Similarité minimale pour accepter une catégorie (entre -1 et 1).
+    // En dessous, l'annonce va dans "Autres" au lieu d'être forcée dans une catégorie qui ne lui va pas.
+    // Calibré sur des exemples réels en FR / PT / EN (php artisan listings:recategorize --dry-run aide à l'ajuster).
+    public const SEUIL = 0.25;
+
 /*C'est une fuction public pour que tout le "systeme" puisse faire de requetes ar cette function
 et array a la fin elle simplemente  annone que la function attends recevoir une array de retour 
 la partie de "response" elle faz appel http pour le python c'est la meme function mais a l'inverse */
@@ -15,7 +23,7 @@ la partie de "response" elle faz appel http pour le python c'est la meme functio
     {
         $response = Http::post('http://127.0.0.1:8001/embedding', [
             'texto' => $text,
-        ]);
+        ])->throw(); // erreur claire si le FastAPI répond une erreur
         return $response->json('embedding');
     }
 
@@ -36,19 +44,31 @@ la partie de "response" elle faz appel http pour le python c'est la meme functio
         return $dotProduct / (sqrt($normA) * sqrt($normB));
     }
 
-    // Trouve la categorie la plus proche de l'embedding donne
+    // Trouve la categorie la plus proche de l'embedding donne.
+    // Si même la meilleure est trop loin (score < SEUIL), renvoie la catégorie "Autres".
     public function findBestCategory(array $embedding, $categories): ?int
     {
         $bestCategoryId = null;
         $bestScore = -1;
+        $parDefautId = null;
 
         foreach ($categories as $category) {
+            // "Autres" n'est jamais comparée : c'est seulement la solution de secours
+            if ($category->name === self::CATEGORIE_PAR_DEFAUT) {
+                $parDefautId = $category->id;
+                continue;
+            }
+
             $score = $this->cosineSimilarity($embedding, $category->embedding);
 
             if ($score > $bestScore) {
                 $bestScore = $score;
                 $bestCategoryId = $category->id;
             }
+        }
+
+        if ($bestScore < self::SEUIL && $parDefautId !== null) {
+            return $parDefautId;
         }
 
         return $bestCategoryId;

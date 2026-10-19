@@ -1,0 +1,311 @@
+/* Page "Mes activités" : toutes les classes commencent par "ma-" */
+
+.ma {
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--color-text);
+}
+
+.ma-main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 44px 24px 64px;
+}
+
+.ma-title {
+    font-family: var(--font-heading);
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0 0 24px;
+}
+
+/* ---------- Onglets ---------- */
+
+.ma-tabs {
+    display: inline-flex;
+    margin-bottom: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.ma-tabs button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.ma-tabs button.is-active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.ma-count {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* nombre de demandes en attente : bien visible */
+.ma-count-alert {
+    background: #F2C14E;
+    color: #4A3500;
+}
+
+/* ---------- Cartes ---------- */
+
+.ma-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ma-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 20px 22px;
+}
+
+.ma-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.ma-cat {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #F5E1D3;
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ma-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.55rem;
+    font-weight: 600;
+    margin: 8px 0 6px;
+    overflow-wrap: anywhere;
+}
+
+.ma-meta {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.ma-comment,
+.ma-hint {
+    margin: 0;
+    font-size: 0.92rem;
+}
+
+.ma-hint {
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.ma-total {
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* ---------- Statut (couleurs du PDF : jaune = en attente) ---------- */
+
+.ma-badge {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ma-badge-pending {
+    background: #FFF4D6;
+    color: #7A5A00;
+}
+
+.ma-badge-approved {
+    background: #E8F3E8;
+    color: #2E6B34;
+}
+
+.ma-badge-rejected {
+    background: #FFF1EF;
+    color: #B3261E;
+}
+
+/* ---------- Informations privées (demande validée) ---------- */
+
+.ma-private {
+    margin-top: 12px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #E8F3E8;
+}
+
+.ma-private-title {
+    margin: 0 0 8px;
+    font-weight: 600;
+    color: #2E6B34;
+}
+
+.ma-private ul {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ma-private a {
+    color: var(--color-primary);
+}
+
+/* ---------- Demandes reçues ---------- */
+
+.ma-requests {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 12px 0 0;
+    border-top: 1px solid #EFE2D4;
+}
+
+.ma-request {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ma-avatar {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #EAD5C3;
+    font-weight: 700;
+}
+
+.ma-request-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.ma-request-body p {
+    margin: 2px 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.ma-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ma-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ma-btn-ok {
+    border: none;
+    background: #2E6B34;
+    color: #FFFFFF;
+}
+
+.ma-btn-ok:hover {
+    background: #234F27;
+}
+
+.ma-btn-no {
+    border: 1px solid #E8B4AE;
+    background: #FFFFFF;
+    color: #B3261E;
+}
+
+.ma-btn-no:hover {
+    background: #FFF1EF;
+}
+
+.ma-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ---------- États ---------- */
+
+.ma-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 36px 20px;
+    border: 1px dashed var(--color-border);
+    border-radius: 18px;
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+.ma-state p {
+    margin: 0;
+}
+
+.ma-state-error {
+    color: #B3261E;
+}
+
+.ma-link {
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: var(--color-surface);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 600px) {
+    .ma-request {
+        flex-wrap: wrap;
+    }
+
+    .ma-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

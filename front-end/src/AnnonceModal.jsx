@@ -1,5 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import './AnnonceModal.css';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 // "2026-10-25T13:30:00Z" → "Dimanche 25 octobre 2026 à 14 h 30" (heure locale)
 function dateLongue(valeur) {
@@ -9,9 +12,86 @@ function dateLongue(valeur) {
     return `${jour.charAt(0).toUpperCase()}${jour.slice(1)} à ${date.getHours()} h${minutes}`;
 }
 
+const STATUTS = {
+    pending: { classe: 'pending', texte: '🟡 Demande envoyée : en attente de validation par l’organisateur.' },
+    approved: { classe: 'approved', texte: '🟢 Participation validée ! L’adresse et le contact sont dans « Mes activités ».' },
+    rejected: { classe: 'rejected', texte: '🔴 Votre demande n’a pas été retenue pour cette activité.' },
+};
+
+// Partie "Participer" de la fenêtre : propre annonce, statut déjà connu, ou formulaire de demande
+function Participation({ annonce, moiId, statut, onParticipation }) {
+    const [commentaire, setCommentaire] = useState('');
+    const [envoi, setEnvoi] = useState(false);
+    const [erreur, setErreur] = useState('');
+
+    if (annonce.user_id === moiId) {
+        return (
+            <p className='am-info'>
+                C’est votre annonce. Les demandes reçues sont dans{' '}
+                <Link to='/mes-activites?onglet=annonces'>Mes activités</Link>.
+            </p>
+        );
+    }
+
+    if (statut) {
+        const s = STATUTS[statut] ?? STATUTS.pending;
+        return <p className={`am-status am-status-${s.classe}`} role='status'>{s.texte}</p>;
+    }
+
+    async function participer(e) {
+        e.preventDefault();
+        setEnvoi(true);
+        setErreur('');
+        try {
+            const response = await fetch(`${API_URL}/listings/${annonce.id}/participate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ comment: commentaire.trim() || null }),
+            });
+            const data = await response.json();
+
+            if (response.status === 201) {
+                onParticipation(annonce.id, data.status ?? 'pending');
+                return;
+            }
+            // 409 = déjà demandé, 403 = propre annonce, 422 = commentaire trop long
+            setErreur(data.errors?.comment?.[0] ?? data.message ?? 'La demande a échoué. Réessayez.');
+        } catch {
+            setErreur('Impossible de joindre le serveur. Vérifiez votre connexion.');
+        } finally {
+            setEnvoi(false);
+        }
+    }
+
+    return (
+        <form className='am-participer' onSubmit={participer}>
+            <label htmlFor='am-commentaire'>Un petit mot pour l’organisateur (facultatif)</label>
+            <textarea
+                id='am-commentaire'
+                rows={3}
+                maxLength={255}
+                value={commentaire}
+                onChange={(e) => setCommentaire(e.target.value)}
+                placeholder='Ex. : Bonjour, je serais ravi de venir !'
+            />
+            <div className='am-participer-bas'>
+                <span className='am-compteur'>{commentaire.length} / 255</span>
+                <button type='submit' className='am-btn' disabled={envoi}>
+                    {envoi ? 'Envoi…' : 'Participer'}
+                </button>
+            </div>
+            {erreur && <p className='am-erreur' role='alert'>{erreur}</p>}
+        </form>
+    );
+}
+
 // Détail d'une annonce, affiché par-dessus la liste (sans changer de page).
 // annonce = null → fenêtre fermée.
-function AnnonceModal({ annonce, onClose }) {
+function AnnonceModal({ annonce, onClose, moiId, statut, onParticipation }) {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -60,6 +140,15 @@ function AnnonceModal({ annonce, onClose }) {
                             Proposé par <strong>{auteur}</strong>
                         </span>
                     </footer>
+
+                    {/* key : le formulaire repart à zéro quand on ouvre une autre annonce */}
+                    <Participation
+                        key={annonce.id}
+                        annonce={annonce}
+                        moiId={moiId}
+                        statut={statut}
+                        onParticipation={onParticipation}
+                    />
                 </article>
             )}
         </dialog>

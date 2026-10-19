@@ -277,6 +277,35 @@ body {
     padding: 22px;
 }
 
+/* Catégorie + statut de ma demande, sur une ligne */
+.db-card-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.db-status {
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.db-status-pending {
+    background: #FFF4D6;
+    color: #7A5A00;
+}
+
+.db-status-approved {
+    background: #E8F3E8;
+    color: #2E6B34;
+}
+
+.db-status-rejected {
+    background: #FFF1EF;
+    color: #B3261E;
+}
+
 .db-badge {
     align-self: flex-start;
     padding: 5px 10px;

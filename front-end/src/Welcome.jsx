@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import './Welcome.css';
 import hands from './assets/hands.png';
 
-// Adresse de l'API Laravel, lue dans le fichier .env du front ("VITE_API_URL")
+// Adresse de l'API Laravel, lue dans le fichier .env du front 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Welcome() {
@@ -65,7 +65,7 @@ function Welcome() {
             if (response.ok) {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                navigate('/formulaire');
+                navigate('/annonces');
                 return;
             }
 

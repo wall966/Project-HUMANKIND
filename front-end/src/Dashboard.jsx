@@ -8,6 +8,16 @@ const API_URL = import.meta.env.VITE_API_URL;
 const PAR_PAGE = 6;
 const FILTRES_VIDES = { q: '', categorie: '', date: '', lieu: '', rayon: '' };
 const RAYONS = [5, 10, 25, 50]; // en km
+const LIBELLES_STATUT = { pending: 'En attente', approved: 'Validée', rejected: 'Refusée' };
+
+// id de l'utilisateur connecté (enregistré au moment de la connexion)
+function idConnecte() {
+    try {
+        return JSON.parse(localStorage.getItem('user'))?.id ?? null;
+    } catch {
+        return null;
+    }
+}
 
 // Distance "à vol d'oiseau" entre deux points GPS (formule de haversine), en km
 function distanceKm(a, b) {
@@ -57,12 +67,15 @@ function formatDate(valeur) {
 function Dashboard() {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const moiId = idConnecte();
     // titre de l'annonce qui vient d'être publiée (envoyé par le formulaire)
     const publiee = useLocation().state?.publiee;
 
     // Données de l'API
     const [annonces, setAnnonces] = useState([]);
     const [categories, setCategories] = useState([]);
+    // statut de MES demandes, par annonce : { 16: 'pending', 18: 'approved' }
+    const [statuts, setStatuts] = useState({});
     const [chargement, setChargement] = useState(true);
     const [erreur, setErreur] = useState('');
     const [essai, setEssai] = useState(0); // incrémenté par le bouton "Réessayer"
@@ -88,9 +101,10 @@ function Dashboard() {
 
         async function charger() {
             try {
-                const [repAnnonces, repCategories] = await Promise.all([
+                const [repAnnonces, repCategories, repActivites] = await Promise.all([
                     fetch(`${API_URL}/listings`, { headers }),
                     fetch(`${API_URL}/categories`, { headers }),
+                    fetch(`${API_URL}/my-activities`, { headers }),
                 ]);
 
                 // token expiré ou révoqué → retour à la connexion
@@ -104,9 +118,11 @@ function Dashboard() {
 
                 const donnees = await repAnnonces.json();
                 const cats = repCategories.ok ? await repCategories.json() : [];
+                const activites = repActivites.ok ? await repActivites.json() : [];
                 if (annule) return;
                 setAnnonces(donnees);
                 setCategories(cats);
+                setStatuts(Object.fromEntries(activites.map((p) => [p.listing_id, p.status])));
                 setErreur('');
             } catch {
                 if (!annule) setErreur('Impossible de charger les annonces. Vérifiez que le serveur est lancé.');
@@ -439,7 +455,14 @@ function Dashboard() {
                                 const categorie = a.category?.name ?? nomCategorie(a.category_id);
                                 return (
                                     <li key={a.id} className='db-card'>
-                                        {categorie && <span className='db-badge'>{categorie}</span>}
+                                        <div className='db-card-top'>
+                                            {categorie && <span className='db-badge'>{categorie}</span>}
+                                            {statuts[a.id] && (
+                                                <span className={`db-status db-status-${statuts[a.id]}`}>
+                                                    {LIBELLES_STATUT[statuts[a.id]]}
+                                                </span>
+                                            )}
+                                        </div>
                                         <h2 className='db-card-title'>{a.title}</h2>
                                         <p className='db-card-text'>{a.description}</p>
 
@@ -503,7 +526,13 @@ function Dashboard() {
             </main>
 
             {/* Détail de l'annonce, par-dessus la liste */}
-            <AnnonceModal annonce={annonceOuverte} onClose={() => setAnnonceOuverte(null)} />
+            <AnnonceModal
+                annonce={annonceOuverte}
+                onClose={() => setAnnonceOuverte(null)}
+                moiId={moiId}
+                statut={annonceOuverte ? statuts[annonceOuverte.id] : undefined}
+                onParticipation={(listingId, statut) => setStatuts((prev) => ({ ...prev, [listingId]: statut }))}
+            />
         </div>
     );
 }

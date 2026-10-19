@@ -6,6 +6,7 @@ import Formulaire from './Formulaire';
 import Dashboard from './Dashboard';
 import Compte from './Compte';
 import Admin from './Admin';
+import MesActivites from './MesActivites';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard/>} />
       <Route path="/compte" element={<Compte/>} />
       <Route path="/admin" element={<Admin/>} />
+      <Route path="/mes-activites" element={<MesActivites/>} />
       </Routes>
     </BrowserRouter>
   )

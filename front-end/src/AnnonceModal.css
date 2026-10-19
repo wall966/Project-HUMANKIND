@@ -3,6 +3,7 @@
 .am {
     width: min(640px, calc(100% - 32px));
     max-height: calc(100vh - 48px);
+    overflow-y: auto; /* la fenêtre défile si l'annonce est longue (petits écrans) */
     padding: 0;
     border: none;
     border-radius: 24px;
@@ -133,4 +134,110 @@
     .am[open] {
         animation: none;
     }
+}
+
+/* ---------- Participer ---------- */
+
+.am-participer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #EFE2D4;
+}
+
+.am-participer label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.am-participer textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #FBF6EE;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text);
+    resize: vertical;
+}
+
+.am-participer textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.am-participer-bas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.am-compteur {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.am-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.am-btn:hover {
+    background: var(--color-primary-hover);
+}
+
+.am-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.am-erreur {
+    margin: 0;
+    color: #B3261E;
+    font-size: 0.9rem;
+}
+
+/* Statut de ma demande (couleurs du PDF : jaune = en attente) */
+.am-status,
+.am-info {
+    margin: 18px 0 0;
+    padding: 14px 16px;
+    border-radius: 14px;
+    line-height: 1.5;
+}
+
+.am-info {
+    background: #FBF6EE;
+}
+
+.am-info a {
+    color: var(--color-primary);
+}
+
+.am-status-pending {
+    background: #FFF4D6;
+    color: #7A5A00;
+}
+
+.am-status-approved {
+    background: #E8F3E8;
+    color: #2E6B34;
+}
+
+.am-status-rejected {
+    background: #FFF1EF;
+    color: #B3261E;
 }

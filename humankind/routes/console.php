@@ -57,4 +57,44 @@ Artisan::command('listings:geocode', function () {
 
     return 0;
 })->purpose('Ajouter les coordonnées GPS aux annonces qui ont une ville');
+
+// php artisan listings:recategorize            → reclasse toutes les annonces
+// php artisan listings:recategorize --dry-run  → affiche seulement ce qui changerait
+// À lancer après avoir ajouté ou modifié des catégories (CategorySeeder).
+// Utilise l'embedding déjà enregistré de chaque annonce : pas besoin du FastAPI.
+Artisan::command('listings:recategorize {--dry-run}', function (\App\Services\EmbeddingService $ia) {
+    $categories = \App\Models\Category::all();
+    $noms = $categories->pluck('name', 'id');
+    $changements = 0;
+
+    foreach (\App\Models\Listing::whereNotNull('embedding')->get() as $annonce) {
+        $nouvelle = $ia->findBestCategory($annonce->embedding, $categories);
+
+        // meilleur score, pour comprendre le choix (hors "Autres")
+        $meilleur = $categories
+            ->where('name', '!=', \App\Services\EmbeddingService::CATEGORIE_PAR_DEFAUT)
+            ->max(fn ($c) => $ia->cosineSimilarity($annonce->embedding, $c->embedding));
+
+        $avant = $noms[$annonce->category_id] ?? '—';
+        $apres = $noms[$nouvelle] ?? '—';
+        $score = number_format($meilleur, 2);
+
+        if ($annonce->category_id === $nouvelle) {
+            $this->line("#{$annonce->id} « {$annonce->title} » : {$apres} (inchangé, score {$score})");
+            continue;
+        }
+
+        $changements++;
+        $this->info("#{$annonce->id} « {$annonce->title} » : {$avant} → {$apres} (score {$score})");
+        if (! $this->option('dry-run')) {
+            $annonce->update(['category_id' => $nouvelle]);
+        }
+    }
+
+    $this->newLine();
+    $this->comment($this->option('dry-run')
+        ? "{$changements} annonce(s) changeraient de catégorie (rien n'a été modifié)."
+        : "{$changements} annonce(s) reclassée(s).");
+    return 0;
+})->purpose('Reclasser les annonces avec les catégories actuelles');
   

@@ -220,6 +220,3 @@ Commandes utiles : `php artisan admin:promote vous@exemple.com` (donner le rôle
 
 ---
 
-## Contact
-
-**Nogueira Wallace**, développeur web et web mobile · [GitHub](https://github.com/wall966)

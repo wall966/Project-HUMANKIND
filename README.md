@@ -219,7 +219,3 @@ Useful commands: `php artisan admin:promote you@example.com` (give the admin rol
 - Deployment: static hosting for the front-end, a VPS for the API, a Docker container for the AI service
 
 ---
-
-## Contact
-
-**Nogueira Wallace**, web and mobile developer · [GitHub](https://github.com/wall966)

@@ -72,19 +72,19 @@ class ListingController extends Controller
     $listings = $request->user()->listings()
       ->with([
         'category:id,name',
-        'participations' => fn ($q) => $q->with('user:id,name')->latest(),
+        'participations' => fn($q) => $q->with('user:id,name')->latest(),
       ])
       ->latest()
       ->get()
-      ->each(fn ($listing) => $listing->makeVisible(['address', 'contact_phone']));
+      ->each(fn($listing) => $listing->makeVisible(['address', 'contact_phone']));
 
     return response()->json($listings);
   }
 
   //retourne l'annonce recherche
-  public function show(Listing $listing):JsonResponse
+  public function show(Listing $listing): JsonResponse
   {
-    $listing->load(['user:id,name', 'category:id,name']);
+    $listing->load(['user:id,name', 'category:id,name']); 
     return response()->json($listing);
   }
 }

@@ -45,7 +45,6 @@ la partie de "response" elle faz appel http pour le python c'est la meme functio
     }
 
     // Trouve la categorie la plus proche de l'embedding donne.
-    // Si même la meilleure est trop loin (score < SEUIL), renvoie la catégorie "Autres".
     public function findBestCategory(array $embedding, $categories): ?int
     {
         $bestCategoryId = null;

@@ -79,7 +79,7 @@ function Register() {
             if (response.ok) {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                navigate('/formulaire');
+                navigate('/annonces');
                 return;
             }
 

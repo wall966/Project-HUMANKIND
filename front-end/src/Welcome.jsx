@@ -85,6 +85,12 @@ function Welcome() {
                 return;
             }
 
+            // 429 : trop de tentatives (throttle:5,1 sur la route /login)
+            if (response.status === 429) {
+                setMessage('Trop de tentatives. Patientez une minute avant de réessayer.');
+                return;
+            }
+
             setMessage('Une erreur est survenue. Réessayez dans un instant.');
         } catch {
             // fetch échoue si le serveur Laravel est éteint ou injoignable

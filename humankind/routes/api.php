@@ -9,8 +9,11 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdminController;
 
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+// throttle:5,1 : 5 tentatives par minute et par adresse IP, puis 429 (contre la force brute)
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
